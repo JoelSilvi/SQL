@@ -515,3 +515,105 @@ update galleta set tipo = "azucarada" where IDGalleta = 5;
 select * from producto;
 
 
+insert into person (nombre, apellido, email, precio, id_sueldo, id_address, id_sexo)
+values
+('Juan', 'Diaz', 'juan@gmail.com');
+
+create table if not exists person (
+	id int not null auto_increment,
+    nombre varchar(50) not null,
+	apellido varchar(50) not null,
+    email varchar(50) not null,
+    primary key(id)
+);
+
+select * from person;
+
+select * from person group by apellido;
+
+alter table person rename column nombre to nombres;
+
+insert into person (nombre, apellido, email)
+values
+('juan', 'diaz', 'juan@gmail.com'),
+('miguel', 'dsaz', 'miguel@gmail.com'),
+('pedro', 'carle', 'pedro@gmail.com'),
+('jose', 'aass', 'jose@gmail.com');
+
+select * from person;
+
+create table if not exists sueldo (
+	id int not null auto_increment,
+    sueldo varchar(50) not null,    
+    id_sueldo int not null,    
+	primary key(id),
+    foreign key(id_sueldo) references person(id)
+);
+
+insert into sueldo (sueldo, id_sueldo)
+values
+('40000', 1),
+('80000', 1),
+('30000', 2),
+('20000', 3),
+('90000', 4),
+('60000', 4);
+
+select * from sueldo;
+
+
+
+create table if not exists address (
+	id int not null auto_increment,
+    address varchar(50) not null,    
+    id_address int not null,
+	primary key(id),
+    foreign key(id_address) references person(id)
+);
+
+insert into address (address, id_address)
+values
+('los alamos', 1),
+('los pinos', 2),
+('los nogales', 3),
+('los rios', 3),
+('los boldos', 4),
+('los quillayes', 4);
+
+select * from address;
+
+create table if not exists sexo (
+	id int not null auto_increment,
+    sexo varchar(50) not null,    
+    id_sexo int not null,    
+	primary key(id),
+    foreign key(id_sexo) references person(id)
+);
+
+insert into sexo (sexo, id_sexo)
+values
+('F', 1),
+('M', 2),
+('F', 3),
+('F', 3),
+('M', 4),
+('F', 4);
+
+select * from sexo;
+
+select * from person;
+
+select p.id, p.nombres, p.apellido, s.sueldo, a.address, sexo.sexo from person p inner join sueldo s on p.id = s.id_sueldo
+inner join address a on p.id = a.id_address inner join sexo on p.id = sexo.id_sexo group by p.id having s.sueldo > '600000';
+
+select p.id, p.nombres, p.apellido, s.sueldo, a.address, sexo.sexo from person p inner join sueldo s on p.id = s.id_sueldo
+inner join address a on p.id = a.id_address inner join sexo on p.id = sexo.id_sexo;
+
+select p.id, p.nombres, p.apellido, s.sueldo, a.address, sexo.sexo from person p cross join sueldo s
+cross join address a cross join sexo where p.id = s.id_sueldo and p.id = a.id_address and p.id = sexo.id_sexo;
+
+select * from person where nombres like '%an';
+
+select person.id, person.nombre, person.apellido, sueldo.sueldo, address.address, sexo.sexo from person inner join sueldo on person.id = sueldo.id_sueldo
+inner join address on person.id = address.id_address
+right join sexo on person.id = sexo.id_sexo;
